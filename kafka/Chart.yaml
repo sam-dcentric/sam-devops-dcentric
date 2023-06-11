@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: 7.0.9
+description: kafka is often referred to as a data structures server. What this means is that kafka provides access to mutable data structures via a set of commands, which are sent using a server-client model with TCP sockets and a simple protocol. So different processes can query and modify the same data structures in a shared way.
+name: kafka
+version: 1

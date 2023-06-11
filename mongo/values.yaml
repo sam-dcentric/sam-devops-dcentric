@@ -1,0 +1,67 @@
+---
+## Set default image, imageTag, and imagePullPolicy. 
+## ref: https://hub.docker.com/_/mongo
+##
+image:
+  repository: mongo
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+env: {}
+
+## Expose the nifi service to be accessed from outside the cluster (LoadBalancer service).
+## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+## ref: http://kubernetes.io/docs/user-guide/services/
+##
+service:
+  type: ClusterIP
+  port: 27017
+  annotations: {}
+  ## clusterIP:
+
+  ## Set the LoadBalancer service type to internal only.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  # loadBalancerIP:
+
+  ## Load Balancer sources
+  ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+  ##
+  # loadBalancerSourceRanges:
+  # - 10.10.10.0/24
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  existingClaim: "mongo"
+  mountPath: /data/db
+  subPath: ""
+  accessModes:  [ReadWriteOnce]
+  ## Storage Capacity for persistent volume
+  size: 5Gi
+  annotations: {}
+
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+   cpu: 100m
+   memory: 512Mi
+  requests:
+   cpu: 1m
+   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+livenessProbe:
+  tcpSocket:
+    port: 27017
+  initialDelaySeconds: 15
+  periodSeconds: 20

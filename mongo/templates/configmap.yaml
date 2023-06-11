@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-mongo
+  labels:
+    app: {{ template "mongo.name" . }}
+    chart: {{ template "mongo.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+data:
+  init.js: |-
+{{ .Files.Get "configs/init.js" | indent 4}}

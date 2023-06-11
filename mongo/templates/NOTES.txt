@@ -1,0 +1,5 @@
+** Please be patient while the chart is being deployed **
+
+mongo can be accessed via port {{ .Values.service.port }} on the following DNS name from within your cluster:
+
+    {{ template "mongo.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local - Read/Write connection

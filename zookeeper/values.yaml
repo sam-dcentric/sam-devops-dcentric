@@ -7,6 +7,8 @@ image:
   tag: "7.3.2"
   pullPolicy: IfNotPresent
 
+replicas: 1
+
 env:
   ZOOKEEPER_CLIENT_PORT: 2181
   ZOOKEEPER_TICK_TIME: 2000
@@ -38,17 +40,28 @@ service:
 persistence: {}
 
 
-resources:
+resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits:
-   cpu: 100m
-   memory: 512Mi
-  requests:
-   cpu: 1m
-   memory: 128Mi
+  # limits:
+  #  cpu: 100m
+  #  memory: 512Mi
+  # requests:
+  #  cpu: 1m
+  #  memory: 128Mi
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: Node
+          operator: NotIn
+          values:
+          - B
+          - C
 
 nodeSelector: {}
 

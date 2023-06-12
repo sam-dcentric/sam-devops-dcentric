@@ -5,7 +5,9 @@
 image:
   repository: redis
   tag: "latest"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
+
+replicas: 1
 
   ## Optionally specify an imagePullSecret.
   ## Secret must be manually created in the namespace.
@@ -92,6 +94,17 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: Node
+          operator: In
+          values:
+          - A
+          - B
 
 nodeSelector: {}
 

@@ -7,6 +7,8 @@ image:
   tag: "7.3.2"
   pullPolicy: Always
 
+replicas: 1
+
 env:
   KAFKA_BROKER_ID: 1
   KAFKA_ZOOKEEPER_CONNECT: zookeeper.kafka.svc.cluster.local:2181
@@ -15,6 +17,13 @@ env:
   KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
   KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+command:
+  - "/bin/bash"
+  - "-c"
+  - |
+    unset KAFKA_PORT;
+    /etc/confluent/docker/run;
 
 ## Expose the nifi service to be accessed from outside the cluster (LoadBalancer service).
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
@@ -40,15 +49,15 @@ service:
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
-persistence: {}
-  # enabled: true
-  # existingClaim: "kafka"
-  # mountPath: /var/lib/kafka/data
-  # subPath: ""
-  # accessModes:  [ReadWriteOnce]
-  # ## Storage Capacity for persistent volume
-  # size: 5Gi
-  # annotations: {}
+persistence:
+  enabled: true
+  existingClaim: "kafka"
+  mountPath: /var/lib/kafka/data
+  subPath: ""
+  accessModes:  [ReadWriteOnce]
+  ## Storage Capacity for persistent volume
+  size: 5Gi
+  annotations: {}
 
 
 resources: {}
@@ -62,6 +71,17 @@ resources: {}
   # requests:
   #  cpu: 1m
   #  memory: 128Mi
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: Node
+          operator: NotIn
+          values:
+          - B
+          - C
 
 nodeSelector: {}
 
